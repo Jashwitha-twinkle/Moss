@@ -1,0 +1,4 @@
+Django>=4.0
+gunicorn
+psycopg2-binary  # if using Postgres
+whitenoise        # optional for static files
