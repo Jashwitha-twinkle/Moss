@@ -1,0 +1,330 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Moss - Aesthetic Stationery</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        .card {
+            transition: transform 0.5s, z-index 0.5s;
+        }
+        .product-image {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            border-radius: 0.5rem;
+        }
+        .carousel-image {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            border-radius: 0.75rem;
+        }
+        .testimonial-image {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            border-radius: 0.5rem;
+        }
+    </style>
+
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
+    />
+</head>
+<body class="p-7 overflow-x-hidden" style="background-color: #FAF8F5;">
+  <!-- Header -->
+  <div id="header" class="flex justify-between items-center px-6 py-4 bg-white rounded-2xl shadow-lg p-3" style="background-color: #eadcdc;">
+    <div>
+      <p class="text-xl font-semibold pl-5">Moss</p>
+    </div>
+    <div class="flex space-x-6 pr-5 gap-3">
+      <p>Home</p>
+      <a href="{% url 'shop' %}" class="hover:text-gray-700">Shop</a>
+      <a href="#about" class="hover:text-gray-700">About</a>
+      <a href="#contact" class="hover:text-gray-700"></a>
+
+          {% if user.is_authenticated %}
+      <!-- Show logout if logged in -->
+      <a href="{% url 'logout' %}" class="hover:text-gray-700 font-semibold">Logout</a>
+    {% else %}
+      <!-- Show login/signup if not logged in -->
+      <a href="{% url 'login' %}" class="hover:text-gray-700 font-semibold">Login</a>
+    {% endif %}
+    </div>
+  </div>
+
+  <!-- Banner Section -->
+  <div class="relative w-full mt-6">
+    <img src="{% static 'images/banner.jpg' %}" 
+         alt="Banner" 
+         class="w-full h-[350px] object-cover rounded-xl">
+
+    <!-- Overlay ONLY inside banner -->
+    <div class="absolute inset-0 flex items-center justify-center">
+      <h1 class="text-white text-3xl md:text-2xl font-bold bg-black bg-opacity-40 px-4 py-2 rounded-lg">
+        ✨ Aesthetic Stationery ✨
+      </h1>
+    </div>
+  </div>
+
+  <!-- Carousel Section -->
+  <div class="relative w-full max-w-5xl mx-auto mt-16">
+    <!-- Arrow Left -->
+    <button onclick="move(-1)" class="absolute left-0 top-1/2 -translate-y-1/2 z-20 bg-white p-2 rounded-full shadow">
+      &#10094;
+    </button>
+
+    <!-- Cards Wrapper -->
+    <div id="carousel" class="flex items-center justify-center relative h-96 overflow-hidden">
+      <div class="card absolute w-64 h-80 bg-[#eadcdc] rounded-xl shadow-md overflow-hidden">
+        <img src="{% static 'images/five.jpg' %}" class="carousel-image" alt="Product 1" />
+      </div>
+      <div class="card absolute w-64 h-80 bg-[#b7a89e] rounded-xl shadow-md overflow-hidden">
+        <img src="{% static 'images/nine.jpg' %}" class="carousel-image" alt="Product 2" />
+      </div>
+      <div class="card absolute w-64 h-80 bg-[#eadcdc] rounded-xl shadow-md overflow-hidden">
+        <img src="{% static 'images/ten.jpg' %}" class="carousel-image" alt="Product 3" />
+      </div>
+      <div class="card absolute w-64 h-80 bg-[#b7a89e] rounded-xl shadow-md overflow-hidden">
+        <img src="{% static 'images/twelve.jpg' %}" class="carousel-image" alt="Product 4" />
+      </div>
+      <div class="card absolute w-64 h-80 bg-[#eadcdc] rounded-xl shadow-md overflow-hidden">
+        <img src="{% static 'images/13.jpg' %}" class="carousel-image" alt="Product 5" />
+      </div>
+    </div>
+
+    <!-- Arrow Right -->
+    <button onclick="move(1)" class="absolute right-0 top-1/2 -translate-y-1/2 z-20 bg-white p-2 rounded-full shadow">
+      &#10095;
+    </button>
+  </div>
+
+  <!-- Testimonials Section -->
+  <div class="px-6 py-16">
+    <p class="font-semibold text-lg mb-6">Testimonials</p>
+
+    <div class="relative bg-[#eadcdc] rounded-xl p-6 max-w-5xl mx-auto shadow-md">
+      <!-- Arrow Left -->
+      <button onclick="prevTestimonial()" class="absolute left-0 top-1/2 -translate-y-1/2 text-2xl px-4 text-gray-600 hover:text-black focus:outline-none">
+        &#8592;
+      </button>
+
+      <!-- Testimonial Content -->
+      <div class="flex flex-col md:flex-row items-center gap-10 px-10">
+        <div class="w-64 h-48 bg-[#b7a89e] rounded-lg overflow-hidden">
+          <img id="testimonial-image" src="{% static 'images/14.jpg' %}" class="testimonial-image" alt="Customer testimonial" />
+        </div>
+        <div class="text-lg text-gray-800 text-center md:text-left" id="testimonial-text">
+          Lorem Ipsum is simply dummy text of the printing and typesetting industry.
+        </div>
+      </div>
+
+      <!-- Arrow Right -->
+      <button onclick="nextTestimonial()" class="absolute right-0 top-1/2 -translate-y-1/2 text-2xl px-4 text-gray-600 hover:text-black focus:outline-none">
+        &#8594;
+      </button>
+    </div>
+  </div>
+
+  <!-- About Section -->
+  <section id="about" class="max-w-5xl mx-auto mt-20 px-6 py-12 bg-[#eadcdc] rounded-2xl shadow-md text-gray-800">
+    <h2 class="text-3xl font-semibold mb-6 text-center">About Moss</h2>
+    <div class="flex flex-col md:flex-row items-center gap-10">
+      <div class="md:w-1/2">
+        <video autoplay muted loop playsinline class="rounded-xl shadow-lg object-cover w-full h-72 md:h-96">
+          <source src="{% static 'images/study.mp4' %}" type="video/mp4">
+          Your browser does not support the video tag.
+        </video>
+      </div>
+      <div class="md:w-1/2 space-y-4 text-lg leading-relaxed">
+        <p>
+          At <span class="font-semibold">Moss</span>, we believe stationery is more than just tools — it's a way to express creativity and bring calm into your daily life.  
+        </p>
+        <p>
+          Our curated collection features elegant, minimal, and thoughtfully designed items that inspire focus and joy in every stroke of your pen or pencil.  
+        </p>
+        <p>
+          From eco-friendly materials to handcrafted details, we are passionate about quality and aesthetics — helping you create beautiful workspaces and unforgettable moments.
+        </p>
+        <p>
+          Join us on this journey to bring simple, timeless beauty to your study, work, or creative space.
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <!-- Footer -->
+    <footer class="bg-[#eadcdc] rounded-2xl mt-16 px-6 py-10 text-sm text-gray-800">
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-10">
+      <!-- UPDATED FEEDBACK SECTION -->
+      <div>
+        <p class="text-lg font-semibold mb-4">Moss</p>
+        <p class="mb-2">Don't forget to give your feedback here 😃👇🏻</p>
+        
+        <!-- Formspree Feedback Form -->
+        <form action="https://formspree.io/f/xnnzkazy" method="POST" class="space-y-3" id="feedback-form">
+          <input 
+            type="text" 
+            name="name"
+            placeholder="Your name (optional)" 
+            class="w-full px-4 py-3 rounded-lg bg-white focus:outline-none shadow-md text-sm" 
+          />
+          <textarea 
+            name="feedback"
+            placeholder="Your feedback here..." 
+            rows="3"
+            class="w-full px-4 py-3 rounded-lg bg-white focus:outline-none shadow-md text-sm resize-none"
+            required
+          ></textarea>
+          
+          <!-- Hidden fields for better organization -->
+          <input type="hidden" name="_subject" value="🌿 New Feedback from Moss Website" />
+          <input type="hidden" name="_next" value="https://your-website.vercel.app/thank-you" />
+          <input type="hidden" name="_template" value="table" />
+          
+          <button 
+            type="submit"
+            class="w-full bg-[#b7a89e] hover:bg-[#a69288] text-white font-semibold py-2 px-4 rounded-lg transition-colors duration-200 disabled:opacity-50 disabled:cursor-not-allowed"
+            id="submit-btn"
+          >
+            Submit Feedback
+          </button>
+        </form>
+        
+        <!-- Success Message -->
+        <div id="success-message" class="hidden mt-3 p-3 bg-green-100 text-green-800 rounded-lg text-sm">
+          🎉 Thank you! Your feedback has been submitted successfully!
+        </div>
+      </div>
+      <div>
+        <a href="#about" class="hover:text-gray-700 text-base font-semibold mb-2">About</a><br>
+        <a href="{% url 'shop' %}" class="hover:text-gray-700 text-base font-semibold mb-2">Shop</a>
+        <p class="text-base font-semibold mb-2">Support</p>
+        <ul>
+          <li>- FAQs</li>
+          <li>- Shipping & Returns</li>
+        </ul>
+      </div>
+      <div>
+        <div id="contact" class="flex items-center space-x-2">
+          <a href="tel:+91123456789" class="flex items-center space-x-2 text-gray-800 hover:text-green-700">
+            <i class="fa-solid fa-phone"></i>
+            <span>(+91) 123456789</span>
+          </a>
+        </div>
+        <div class="flex items-center space-x-2 mt-2">
+          <a href="mailto:talk@moss.co" class="flex items-center space-x-2 text-gray-800 hover:text-green-700">
+            <i class="fa-solid fa-at"></i>
+            <span>talk@moss.co</span>
+          </a>
+        </div>
+      </div>
+    </div>
+  </footer>
+
+  <!-- Hidden data for JavaScript (Django template tags rendered server-side) -->
+  <div id="testimonial-data" style="display: none;">
+    <div data-text="Lorem Ipsum is simply dummy text of the printing and typesetting industry." data-image="{% static 'images/14.jpg' %}"></div>
+    <div data-text="Great quality stationery! Love the aesthetic." data-image="{% static 'images/15.jpg' %}"></div>
+    <div data-text="Highly recommend Moss for their unique designs and fast shipping." data-image="{% static 'images/16.jpg' %}"></div>
+  </div>
+
+  <!-- Scripts -->
+  <script>
+    const cards = document.querySelectorAll('.card');
+    let current = 2;
+
+    function renderCarousel() {
+      cards.forEach((card, index) => {
+        const offset = index - current;
+        const zIndex = 10 - Math.abs(offset);
+        const scale = offset === 0 ? 1 : 0.9;
+        const translateX = offset * 100;
+        const rotate = offset === 0 ? 0 : offset * -5;
+
+        card.style.zIndex = zIndex;
+        card.style.transform = `translateX(${translateX}%) scale(${scale}) rotateY(${rotate}deg)`;
+        card.style.opacity = Math.abs(offset) > 2 ? 0 : 1;
+      });
+    }
+
+    function move(dir) {
+      current = (current + dir + cards.length) % cards.length;
+      renderCarousel();
+    }
+
+    renderCarousel();
+
+    // Load testimonials from hidden data elements (Django-rendered)
+    const testimonialElements = document.querySelectorAll('#testimonial-data > div');
+    const testimonials = Array.from(testimonialElements).map(el => ({
+      text: el.getAttribute('data-text'),
+      image: el.getAttribute('data-image')
+    }));
+
+    let currentTestimonial = 0;
+
+    function updateTestimonial() {
+      if (testimonials.length > 0) {
+        const testimonial = testimonials[currentTestimonial];
+        document.getElementById('testimonial-text').innerText = testimonial.text;
+        document.getElementById('testimonial-image').src = testimonial.image;
+      }
+    }
+
+    // Run once on load
+    updateTestimonial();
+
+    function nextTestimonial() {
+      if (testimonials.length > 0) {
+        currentTestimonial = (currentTestimonial + 1) % testimonials.length;
+        updateTestimonial();
+      }
+    }
+
+    function prevTestimonial() {
+      if (testimonials.length > 0) {
+        currentTestimonial = (currentTestimonial - 1 + testimonials.length) % testimonials.length;
+        updateTestimonial();
+      }
+    }
+
+        const feedbackForm = document.getElementById('feedback-form');
+    const submitBtn = document.getElementById('submit-btn');
+    const successMessage = document.getElementById('success-message');
+
+    feedbackForm.addEventListener('submit', function(e) {
+      // Change button text and disable it
+      submitBtn.innerHTML = 'Sending...';
+      submitBtn.disabled = true;
+      
+      // The form will submit to Formspree automatically
+      // After submission, Formspree will redirect or show their success page
+    });
+
+    // Optional: Handle form response if staying on same page
+    feedbackForm.addEventListener('submit', function(e) {
+      setTimeout(() => {
+        successMessage.classList.remove('hidden');
+        feedbackForm.style.display = 'none';
+        
+        // Reset after 5 seconds
+        setTimeout(() => {
+          feedbackForm.style.display = 'block';
+          successMessage.classList.add('hidden');
+          feedbackForm.reset();
+          submitBtn.innerHTML = 'Submit Feedback';
+          submitBtn.disabled = false;
+        }, 5000);
+      }, 1000);
+    });
+
+
+
+  </script>
+</body>
+</html>

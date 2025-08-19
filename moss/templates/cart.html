@@ -1,0 +1,99 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Your Cart - Moss</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body  style="background-color: #FAF8F5;">
+
+  <h1 class="text-3xl font-bold mb-6 text-center">Your Cart</h1>
+
+  <!-- Cart Items -->
+  <div id="cartItems" class="max-w-4xl mx-auto space-y-4"></div>
+
+  <!-- Total -->
+  <div class="max-w-4xl mx-auto mt-6 text-right">
+    <p class="text-xl font-semibold">Total: ₹<span id="cartTotal">0</span></p>
+  </div>
+
+  <!-- Buttons -->
+  <div class="max-w-4xl mx-auto mt-6 flex justify-between">
+    <button onclick="clearCart()" 
+            class="bg-red-500 text-white px-6 py-2 rounded-lg hover:bg-red-600">
+      Clear Cart
+    </button>
+    <button onclick="checkout()" 
+            class="bg-green-600 text-white px-6 py-2 rounded-lg hover:bg-green-700">
+      Checkout
+    </button>
+  </div>
+
+  <script>
+    // 🧺 Load the basket
+    let cart = JSON.parse(localStorage.getItem('cart')) || [];
+
+    function renderCart() {
+      const cartItemsDiv = document.getElementById('cartItems');
+      const cartTotalSpan = document.getElementById('cartTotal');
+      cartItemsDiv.innerHTML = "";
+      let total = 0;
+
+      if (cart.length === 0) {
+        cartItemsDiv.innerHTML = "<p class='text-center text-gray-500'>Your cart is empty.</p>";
+        cartTotalSpan.innerText = "0";
+        return;
+      }
+
+      cart.forEach((item, index) => {
+        total += parseFloat(item.price);
+
+        cartItemsDiv.innerHTML += `
+          <div class="flex items-center bg-white shadow rounded-lg p-4">
+            <img src="${item.image}" class="w-24 h-24 object-cover rounded-lg mr-4">
+            <div class="flex-1">
+              <h2 class="font-semibold text-lg">${item.name}</h2>
+              <p class="text-gray-600">₹${item.price}</p>
+            </div>
+            <button onclick="removeFromCart(${index})" 
+                    class="text-red-500 hover:text-red-700 font-bold">
+              &times;
+            </button>
+          </div>
+        `;
+      });
+
+      cartTotalSpan.innerText = total.toFixed(2);
+    }
+
+    // ❌ Remove one item
+    function removeFromCart(index) {
+      cart.splice(index, 1);
+      localStorage.setItem('cart', JSON.stringify(cart));
+      renderCart();
+    }
+
+    // 🗑 Clear everything
+    function clearCart() {
+      cart = [];
+      localStorage.removeItem('cart');
+      renderCart();
+    }
+
+    // 💳 Fake checkout
+    function checkout() {
+      if (cart.length === 0) {
+        alert("Your cart is empty!");
+        return;
+      }
+      alert("Thank you for your purchase! 🎉");
+      clearCart();
+    }
+
+    // 🚀 Show the cart when page loads
+    renderCart();
+  </script>
+
+</body>
+</html>
